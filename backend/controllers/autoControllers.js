@@ -10,17 +10,21 @@ const getAutos = asyncHandler(async(req,res) => {
 
 const setAutos = asyncHandler(async(req,res) => {
 
-    if(!req.body.nombre){     //? TEXTO es el nombre del campo
+    if(!req.body.marca || (!req.body.modelo) || (!req.body.anio) || (!req.body.color)){     //? TEXTO es el nombre del campo
         //res.status(400).json({mensaje: 'Favor de teclear la descripcion de la tarea '})
         res.status(400)
         throw new Error('Favor de teclear nombre del auto ')
     }
 
     const auto = await Auto.create({
-        nombre: req.body.nombre
+        marca: req.body.marca,
+        modelo: req.body.modelo,
+        anio: req.body.anio,
+        color: req.body.color
     })
 
-    res.status(201).json({mensaje:'Escribre un nombre de auto descente'})
+    //res.status(201).json({mensaje:'Escribre un nombre de auto descente'}) //? Si quiero solo ver el mensaje es esta linea y si quiero la informacion pues la de abajo
+    res.status(201).json(auto)
 })
 
 const updateAutos = asyncHandler(async(req,res) => {

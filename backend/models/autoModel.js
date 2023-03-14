@@ -1,12 +1,22 @@
 const mongoose = require('mongoose')
 
 const autoSchema = mongoose.Schema({
-    nombre: {
+    marca: {
         type: String,
-        require: [true, 'Por favor escribe un nombre de auto real']
+        required: [true, 'Por favor escribe una marca de auto real']
+    },
+    modelo: {
+        type: String,
+        required: [true, 'Por favor escribe un modelo de auto real']
+    },
+    anio: {
+        type: Number,
+        required: [true, 'Por favor escribe el año de tu auto']
+    },
+    color: {
+        type: String,
+        required: [true, 'Por favor escribe un color']
     }
-    
-
 },{
     timestamps: true
 })

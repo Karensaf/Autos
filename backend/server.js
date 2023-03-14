@@ -14,4 +14,4 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/autos', require('./routes/autosRoutes'))
 
-app.listen(port, ()=> console.log(`Server iniciando en el puerto ${port}`))
+app.listen(port, ()=> console.log(`Iniciando en el puerto ${port}`))
