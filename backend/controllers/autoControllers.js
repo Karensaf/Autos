@@ -2,8 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Auto = require('../models/autoModel')
 
 const getAutos = asyncHandler(async(req,res) => {
-
-    const autos = await Auto.find()
+    const autos = await Auto.find({user: req.user.id})
 
     res.status(200).json(autos)
 })
@@ -20,7 +19,8 @@ const setAutos = asyncHandler(async(req,res) => {
         marca: req.body.marca,
         modelo: req.body.modelo,
         anio: req.body.anio,
-        color: req.body.color
+        color: req.body.color,
+        user: req.user.id
     })
 
     //res.status(201).json({mensaje:'Escribre un nombre de auto descente'}) //? Si quiero solo ver el mensaje es esta linea y si quiero la informacion pues la de abajo
@@ -34,6 +34,12 @@ const updateAutos = asyncHandler(async(req,res) => {
     if (!auto) {
         res.status(400)
         throw new Error('Auto no encontrado')
+    }
+
+    // //? Verificamos q el auto pertenece al usuario del token 
+    if(auto.user.toString() !== req.user.id){
+        res.status(401)
+        throw new Error('Acceso No Autorizado, el auto no pertenece al usuario logeado')
     }
 
     const autoModificado = await Auto.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -50,9 +56,14 @@ const deleteAutos = asyncHandler(async(req,res) => {
         throw new Error ('Auto no encontrado')
     }
 
-    // await tarea.remove    //? Esta solo la borra si existe
+    if(auto.user.toString() !== req.user.id){
+        res.status(401)
+        throw new Error('Acceso No Autorizado, el auto no pertenece al usuario logeado')
+    }
 
-     const autoBorrado = await Auto.findByIdAndDelete(req.params.id)  //? Es correcta pero ya no tiene caso q ponga cual va a borrar
+    // await tarea.remove    //? Esta solo la borra si existe
+    await auto.deleteOne()
+    //const autoBorrado = await Auto.findByIdAndDelete(req.params.id)  //? Es correcta pero ya no tiene caso q ponga cual va a borrar
 
 
     res.status(200).json({id: req.params.id})
